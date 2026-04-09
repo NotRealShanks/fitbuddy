@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { auth } from './firebase'; 
-import { onAuthStateChanged, signOut, deleteUser } from 'firebase/auth'; 
+import { onAuthStateChanged, signOut } from 'firebase/auth';  // need to add deleteUser
 import Auth from './components/Auth'; 
-import LoadingOverlay from './components/LoadingOverlay';
+// import LoadingOverlay from './components/LoadingOverlay';
 import AccountSettings from './components/AccountSettings';
 import './App.css'; 
 
