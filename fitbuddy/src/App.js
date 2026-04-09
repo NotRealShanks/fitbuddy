@@ -183,7 +183,7 @@ function App() {
             </div>
             <div style={styles.profileInfo}>
               {/* Display user email dynamically */}
-              <div style={styles.profileName}>{user?.email ? user.email.split('@')[0] : 'My Profile'}</div>
+              <div style={styles.profileName}>{user?.displayName ? user.displayName : (user?.email ? user.email.split('@')[0] : 'My Profile')}</div>
               <div style={styles.profileSub}>Habit Tracker</div>
             </div>
             <div style={styles.profileBadge}>✦</div>

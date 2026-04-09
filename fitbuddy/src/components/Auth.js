@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { auth } from '../firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import '../App.css'; 
 
 export default function Auth() {
@@ -17,7 +17,14 @@ export default function Auth() {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        // 1. Create the account
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        // 2. Attach the Name to the newly created profile
+        await updateProfile(userCredential.user, {
+          displayName: name
+        });
+        // Force a page reload so the main app sees the new display name immediately
+        window.location.reload(); 
       }
     } catch (err) {
       switch (err.code) {
