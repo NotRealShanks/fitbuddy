@@ -2,19 +2,22 @@ function WeeklyBar({ day }) {
   const pct = day.total === 0 ? 0 : Math.round((day.count / day.total) * 100);
   const isToday = day.key === new Date().toISOString().slice(0, 10);
 
+  const barColor = pct === 100
+    ? '#8aab8a'
+    : pct > 0
+    ? 'rgba(138,171,138,0.45)'
+    : 'rgba(255,255,255,0.06)';
+
   return (
     <div style={styles.barCol}>
       <div style={styles.barWrap}>
-        <div style={{
-          ...styles.barFill,
-          height: `${pct}%`,
-          backgroundColor: pct === 100 ? '#22c55e' : pct > 0 ? '#86efac' : '#e5e7eb',
-        }} />
+        {/* FIX: Added backticks around the height percentage value */}
+        <div style={{ ...styles.barFill, height: `${pct}%`, backgroundColor: barColor }} />
       </div>
       <span style={{
         ...styles.dayLabel,
         fontWeight: isToday ? '700' : '400',
-        color: isToday ? '#22c55e' : '#9ca3af',
+        color: isToday ? '#8aab8a' : '#8a7060',
       }}>
         {day.label}
       </span>
@@ -26,18 +29,18 @@ function WeeklyStats({ streak, weeklyData, habitStats }) {
   return (
     <div style={styles.card}>
 
-      {/* Streak + week score header */}
+      {/* Metrics row */}
       <div style={styles.metricRow}>
         <div style={styles.metric}>
           <span style={styles.metricNum}>{streak}</span>
-          <span style={styles.metricLabel}>🔥 day streak</span>
+          <span style={styles.metricLabel}>🔥 streak</span>
         </div>
         <div style={styles.divider} />
         <div style={styles.metric}>
           <span style={styles.metricNum}>
             {weeklyData.filter(d => d.count === d.total && d.total > 0).length}
           </span>
-          <span style={styles.metricLabel}>✅ perfect days</span>
+          <span style={styles.metricLabel}>✅ perfect</span>
         </div>
         <div style={styles.divider} />
         <div style={styles.metric}>
@@ -48,7 +51,7 @@ function WeeklyStats({ streak, weeklyData, habitStats }) {
         </div>
       </div>
 
-      {/* Weekly bar chart */}
+      {/* Bar chart */}
       <div style={styles.chartTitle}>Last 7 days</div>
       <div style={styles.chart}>
         {weeklyData.map(day => <WeeklyBar key={day.key} day={day} />)}
@@ -58,20 +61,17 @@ function WeeklyStats({ streak, weeklyData, habitStats }) {
       <div style={styles.chartTitle}>Habit consistency (7 days)</div>
       {habitStats.map(h => {
         const pct = Math.round((h.completedDays / 7) * 100);
+        const fillColor = pct >= 80 ? '#8aab8a' : pct >= 50 ? '#e8a830' : '#c8860a';
         return (
           <div key={h.id} style={styles.habitRow}>
             <span style={styles.habitEmoji}>{h.emoji}</span>
             <div style={styles.habitInfo}>
               <div style={styles.habitTop}>
                 <span style={styles.habitName}>{h.name}</span>
-                <span style={styles.habitPct}>{h.completedDays}/7 days</span>
+                <span style={styles.habitPct}>{h.completedDays}/7</span>
               </div>
               <div style={styles.miniTrack}>
-                <div style={{
-                  ...styles.miniFill,
-                  width: `${pct}%`,
-                  backgroundColor: pct >= 80 ? '#22c55e' : pct >= 50 ? '#facc15' : '#f87171',
-                }} />
+                <div style={{ ...styles.miniFill, width: `${pct}%`, backgroundColor: fillColor }} />
               </div>
             </div>
           </div>
@@ -83,48 +83,50 @@ function WeeklyStats({ streak, weeklyData, habitStats }) {
 
 const styles = {
   card: {
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    background: 'rgba(40,18,4,0.6)',
+    border: '1px solid rgba(138,171,138,0.28)',
+    borderRadius: '16px',
+    padding: '20px',
+    marginBottom: '20px',
     backdropFilter: 'blur(20px)',
     WebkitBackdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: '20px',
-    padding: '32px',
-    maxWidth: '900px',
   },
   metricRow: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    marginBottom: '20px',
-    paddingBottom: '16px',
-    borderBottom: '1px solid #f3f4f6',
+    display: 'flex', justifyContent: 'space-around', alignItems: 'center',
+    marginBottom: '20px', paddingBottom: '16px',
+    borderBottom: '1px solid rgba(138,171,138,0.12)',
   },
-  metric: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' },
-  metricNum: { fontSize: '26px', fontWeight: '700', color: '#111' },
-  metricLabel: { fontSize: '12px', color: '#9ca3af' },
-  divider: { width: '1px', height: '40px', backgroundColor: '#f3f4f6' },
-  chartTitle: { fontSize: '13px', fontWeight: '600', color: '#6b7280', marginBottom: '10px' },
-  chart: { display: 'flex', gap: '6px', alignItems: 'flex-end', marginBottom: '20px' },
-  barCol: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' },
+  metric: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' },
+  metricNum: { fontSize: '26px', fontWeight: '700', color: '#e8a830', fontFamily: 'Syne, sans-serif' },
+  metricLabel: { fontSize: '12px', color: '#8a7060' },
+  divider: { width: '1px', height: '40px', background: 'rgba(138,171,138,0.12)' },
+  chartTitle: {
+    fontSize: '11px', fontWeight: '500', color: '#8a7060',
+    textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '12px',
+  },
+  chart: { display: 'flex', gap: '6px', alignItems: 'flex-end', marginBottom: '24px' },
+  barCol: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' },
   barWrap: {
-    width: '100%',
-    height: '60px',
-    backgroundColor: '#f3f4f6',
-    borderRadius: '4px',
-    display: 'flex',
-    alignItems: 'flex-end',
-    overflow: 'hidden',
+    width: '100%', height: '64px',
+    background: 'rgba(255,255,255,0.05)',
+    borderRadius: '6px', display: 'flex',
+    alignItems: 'flex-end', overflow: 'hidden',
+    border: '1px solid rgba(138,171,138,0.1)',
   },
-  barFill: { width: '100%', borderRadius: '4px', transition: 'height 0.4s ease' },
+  barFill: { width: '100%', borderRadius: '4px', transition: 'height 0.5s ease' },
   dayLabel: { fontSize: '11px' },
-  habitRow: { display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' },
-  habitEmoji: { fontSize: '20px', width: '28px', textAlign: 'center' },
+  habitRow: { display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' },
+  habitEmoji: { fontSize: '18px', width: '28px', textAlign: 'center' },
   habitInfo: { flex: 1 },
-  habitTop: { display: 'flex', justifyContent: 'space-between', marginBottom: '4px' },
-  habitName: { fontSize: '13px', fontWeight: '500' },
-  habitPct: { fontSize: '12px', color: '#9ca3af' },
-  miniTrack: { height: '6px', backgroundColor: '#f3f4f6', borderRadius: '99px', overflow: 'hidden' },
-  miniFill: { height: '100%', borderRadius: '99px', transition: 'width 0.4s ease' },
+  habitTop: { display: 'flex', justifyContent: 'space-between', marginBottom: '5px' },
+  habitName: { fontSize: '13px', fontWeight: '500', color: '#f5ede0' },
+  habitPct: { fontSize: '12px', color: '#8a7060' },
+  miniTrack: {
+    height: '5px', background: 'rgba(255,255,255,0.06)',
+    borderRadius: '99px', overflow: 'hidden',
+    border: '1px solid rgba(138,171,138,0.1)',
+  },
+  miniFill: { height: '100%', borderRadius: '99px', transition: 'width 0.5s ease' },
 };
 
 export default WeeklyStats;

@@ -1,44 +1,99 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { auth } from './firebase'; // Added Firebase import
-import { onAuthStateChanged, signOut } from 'firebase/auth'; // Added Auth hooks
-import Auth from './components/Auth'; // Added Auth screen
-import './App.css'; // Imported your new CSS file
+import { auth } from './firebase'; // Restored Firebase import
+import { onAuthStateChanged, signOut } from 'firebase/auth'; // Restored Auth hooks
+import Auth from './components/Auth'; // Restored Auth screen
+import './App.css'; // Keep for Auth screen styles
 
 import {
-  fetchAll,
-  addHabitAsync,
-  deleteHabitAsync,
-  completeHabitAsync,
+  fetchAll, addHabitAsync, deleteHabitAsync, completeHabitAsync,
 } from './store/habitsSlice';
 import {
-  selectCompletedToday,
-  selectStreak,
-  selectWeeklyData,
-  selectHabitStats,
-  selectTodayKey,
+  selectCompletedToday, selectStreak, selectWeeklyData,
+  selectHabitStats, selectTodayKey,
 } from './store/selectors';
-import HabitCard    from './components/HabitCard';
-import AddHabitForm from './components/AddHabitForm';
-import WeeklyStats  from './components/WeeklyStats';
+import HabitCard, { CARD_ACCENTS } from './components/HabitCard';
+import AddHabitForm                from './components/AddHabitForm';
+import WeeklyStats                 from './components/WeeklyStats';
+import PomodoroTimer               from './components/PomodoroTimer';
+
+/* ─── Google Fonts injected once ─────────────────────────────────────── */
+if (!document.getElementById('fitbuddy-fonts')) {
+  const link = document.createElement('link');
+  link.id   = 'fitbuddy-fonts';
+  link.rel  = 'stylesheet';
+  link.href = 'https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap';
+  document.head.appendChild(link);
+}
+
+/* ─── Background orbs injected once ──────────────────────────────────── */
+if (!document.getElementById('fitbuddy-bg')) {
+  const style = document.createElement('style');
+  style.id = 'fitbuddy-bg';
+  style.textContent = `
+    body { margin:0; background:#2a1505; font-family:'DM Sans',sans-serif; }
+    #fitbuddy-orbs { position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden; }
+    .fb-orb { position:absolute;border-radius:50%;filter:blur(90px); }
+    .fb-orb1 { width:560px;height:560px;background:radial-gradient(circle,#3d1f08,transparent 70%);top:-100px;left:-80px;opacity:0.7; }
+    .fb-orb2 { width:480px;height:480px;background:radial-gradient(circle,#0d4a5c,transparent 70%);top:40px;right:-60px;opacity:0.5; }
+    .fb-orb3 { width:420px;height:420px;background:radial-gradient(circle,#5c2e0a,transparent 70%);bottom:80px;left:40px;opacity:0.6; }
+    .fb-orb4 { width:340px;height:340px;background:radial-gradient(circle,#1a6b82,transparent 70%);bottom:-60px;right:100px;opacity:0.45; }
+    .fb-orb5 { width:260px;height:260px;background:radial-gradient(circle,#c8860a,transparent 70%);top:42%;left:36%;opacity:0.3; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:rgba(138,171,138,0.25);border-radius:99px; }
+
+    /* responsive */
+    @media(max-width:640px){
+      .fb-shell { grid-template-columns:1fr !important; }
+      .fb-sidebar { position:static !important;height:auto !important;flex-direction:row !important;padding:14px 16px !important;border-right:none !important;border-bottom:1px solid rgba(200,134,10,0.15) !important;overflow-x:auto !important; }
+      .fb-logo { margin-bottom:0 !important; }
+      .fb-nav-dot { display:none !important; }
+      .fb-sidebar-bottom { display:none !important; }
+      .fb-main { padding:18px 16px !important; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // inject orb divs
+  const orbs = document.createElement('div');
+  orbs.id = 'fitbuddy-orbs';
+  orbs.innerHTML = `
+    <div class="fb-orb fb-orb1"></div>
+    <div class="fb-orb fb-orb2"></div>
+    <div class="fb-orb fb-orb3"></div>
+    <div class="fb-orb fb-orb4"></div>
+    <div class="fb-orb fb-orb5"></div>
+  `;
+  document.body.prepend(orbs);
+}
+
+/* ─── Nav items ───────────────────────────────────────────────────────── */
+const NAV = [
+  { key: 'today',    label: 'Today',        color: '#e8a830' },
+  { key: 'stats',    label: 'Weekly Stats', color: '#4db8d4' },
+  { key: 'pomodoro', label: 'Pomodoro',     color: '#8aab8a' },
+];
 
 function App() {
   const [view, setView] = useState('today');
-  
-  // Auth State
+
+  // Restored Auth State
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
   const dispatch       = useDispatch();
-  const habits         = useSelector(state => state.habits.habits);
-  const loading        = useSelector(state => state.habits.loading);
-  const error          = useSelector(state => state.habits.error);
+  const habits         = useSelector(s => s.habits.habits);
+  const loading        = useSelector(s => s.habits.loading);
+  const error          = useSelector(s => s.habits.error);
   const completedToday = useSelector(selectCompletedToday);
   const streak         = useSelector(selectStreak);
   const weeklyData     = useSelector(selectWeeklyData);
   const habitStats     = useSelector(selectHabitStats);
 
-  // Listen for login/logout
+  // Restored login/logout listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -47,7 +102,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // Fetch habits ONLY if a user is successfully logged in
+  // Restored Auth-gated fetch
   useEffect(() => { 
     if (user) {
       dispatch(fetchAll()); 
@@ -62,178 +117,334 @@ function App() {
   const totalCount      = habits.length;
   const progressPercent = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
 
-  const today = new Date().toLocaleDateString('en', { weekday: 'long', month: 'long', day: 'numeric' });
-
-  // 1. Show auth loading screen while Firebase checks session
+  // 1. Restored Auth loading screen
   if (authLoading) return (
-    <div className="splash">
-      <div className="splash-inner">
-        <span style={{ fontSize: '56px' }}>⏳</span>
-        <h1 className="splash-title">FitBuddy</h1>
-        <p className="splash-sub">Authenticating...</p>
-      </div>
+    <div style={styles.centered}>
+      <span style={{ fontSize: '56px' }}>⏳</span>
+      <p style={{ color: '#8aab8a', marginTop: '8px' }}>Authenticating...</p>
     </div>
   );
 
-  // 2. If no user is logged in, show the login screen
+  // 2. Restored Login check
   if (!user) return <Auth />;
 
-  // 3. Show data loading screen
+  /* 3. loading */
   if (loading) return (
-    <div className="splash">
-      <div className="splash-inner">
-        <span style={{ fontSize: '56px' }}>💪</span>
-        <h1 className="splash-title">FitBuddy</h1>
-        <p className="splash-sub">Loading your program...</p>
-      </div>
+    <div style={styles.centered}>
+      <p style={{ fontSize: '32px' }}>🌿</p>
+      <p style={{ color: '#8aab8a', marginTop: '8px' }}>Loading FitBuddy…</p>
     </div>
   );
 
-  // 4. Show Error Screen
+  /* 4. error */
   if (error) return (
-    <div className="splash">
-      <div className="splash-inner">
-        <span style={{ fontSize: '48px' }}>⚠️</span>
-        <p style={{ color: '#ff4444', fontWeight: '700', marginTop: '16px' }}>{error}</p>
-        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginTop: '8px' }}>
-          Run <code style={{ color: '#ff6b00' }}>node server.js</code> in fitbuddy-server
-        </p>
-      </div>
+    <div style={styles.centered}>
+      <p style={{ fontSize: '32px' }}>⚠️</p>
+      <p style={{ color: '#e8a830', fontWeight: '600' }}>{error}</p>
+      <p style={{ color: '#8a7060', fontSize: '13px', marginTop: '6px' }}>
+        Run <code style={{ color: '#4db8d4' }}>node server.js</code> in the fitbuddy-server folder
+      </p>
     </div>
   );
 
-  // 5. Main App Render
   return (
-    <div className="page">
-      {/* ── TOP NAVBAR ── */}
-      <nav className="navbar">
-        <div className="nav-brand">
-          <span className="nav-icon">💪</span>
-          <span className="nav-title">FitBuddy</span>
-        </div>
-        <div className="nav-center">
-          <button
-            className={`nav-btn ${view === 'today' ? 'active' : ''}`}
-            onClick={() => setView('today')}
-          >
-            Today
-          </button>
-          <button
-            className={`nav-btn ${view === 'stats' ? 'active' : ''}`}
-            onClick={() => setView('stats')}
-          >
-            Weekly Stats
-          </button>
-        </div>
-        <div className="nav-right">
-          {streak > 0 && <div className="streak-pill">🔥 {streak} day streak</div>}
-          <button className="logout-btn" onClick={() => { signOut(auth).then(() => window.location.reload()); }}>Logout</button>
-        </div>
-      </nav>
+    <div className="fb-shell" style={styles.shell}>
 
-      {/* ── HERO BANNER ── */}
-      <div className="hero">
-        <div className="hero-content">
-          <p className="hero-date">{today}</p>
-          <h1 className="hero-title">
-            {completedCount === totalCount && totalCount > 0
-              ? 'Beast Mode Activated! 🎉'
-              : 'Time to crush your goals.'}
-          </h1>
-          <p className="hero-sub">
-            {completedCount} of {totalCount} habits completed today
-          </p>
+      {/* ── SIDEBAR ─────────────────────────────────────────── */}
+      <aside className="fb-sidebar" style={styles.sidebar}>
+        <div className="fb-logo" style={styles.logo}>
+          <div style={styles.logoDot} />
+          FitBuddy
+        </div>
 
-          <div className="hero-bar">
-            <div className="hero-bar-track">
-              <div className="hero-bar-fill" style={{ width: `${progressPercent}%` }} />
+        {NAV.map(n => (
+          <div
+            key={n.key}
+            style={{
+              ...styles.navItem,
+              ...(view === n.key ? styles.navActive : {}),
+            }}
+            onClick={() => setView(n.key)}
+          >
+            <div className="fb-nav-dot" style={{ ...styles.navDot, background: n.color, boxShadow: `0 0 6px ${n.color}` }} />
+            {n.label}
+          </div>
+        ))}
+
+        <div className="fb-sidebar-bottom" style={styles.sidebarBottom}>
+          {/* User avatar card */}
+          <div style={styles.profileCard}>
+            <div style={styles.profileImgRing}>
+              <img src="/image.png" alt="Profile" style={styles.profilePhoto}
+                onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
+              />
+              <div style={{ ...styles.profileFallback, display:'none' }}>🌿</div>
+              <div style={styles.profileOnline} />
             </div>
-            <span className="hero-bar-pct">{progressPercent}%</span>
+            <div style={styles.profileInfo}>
+              {/* Display user email dynamically */}
+              <div style={styles.profileName}>{user?.email ? user.email.split('@')[0] : 'My Profile'}</div>
+              <div style={styles.profileSub}>Habit Tracker</div>
+            </div>
+            <div style={styles.profileBadge}>✦</div>
+          </div>
+
+          {/* Streak badge */}
+          <div style={styles.streakPill}>
+            <div style={styles.streakNum}>🔥 {streak}</div>
+            <div style={styles.streakLabel}>Day Streak. Keep Going!</div>
+            <div style={styles.streakTrack}>
+              <div style={{ ...styles.streakFill, width: `${Math.min((streak / 7) * 100, 100)}%` }} />
+            </div>
+          </div>
+
+          {/* Restored Logout Button integrated into sidebar */}
+          <button 
+            style={styles.logoutBtn} 
+            onClick={() => { signOut(auth).then(() => window.location.reload()); }}
+          >
+            Log Out
+          </button>
+        </div>
+      </aside>
+
+      {/* ── MAIN ────────────────────────────────────────────── */}
+      <main className="fb-main" style={styles.main}>
+
+        {/* Page header */}
+        <div style={styles.pageHeader}>
+          <div>
+            <span style={styles.hi}>Good morning,</span>
+            <div style={styles.pageTitle}>Let's crush it.</div>
+          </div>
+          <div style={styles.dateBadge}>
+            {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
           </div>
         </div>
 
-        <div className="hero-pills">
-          <div className="pill">
-            <span className="pill-num">{totalCount}</span>
-            <span className="pill-label">Habits</span>
-          </div>
-          <div className="pill-divider" />
-          <div className="pill">
-            <span className="pill-num">{streak}</span>
-            <span className="pill-label">Day Streak</span>
-          </div>
-          <div className="pill-divider" />
-          <div className="pill">
-            <span className="pill-num">
-              {weeklyData.filter(d => d.count === d.total && d.total > 0).length}
-            </span>
-            <span className="pill-label">Perfect Days</span>
-          </div>
-          <div className="pill-divider" />
-          <div className="pill">
-            <span className="pill-num">
-              {weeklyData.reduce((s, d) => s + d.count, 0)}
-            </span>
-            <span className="pill-label">This Week</span>
-          </div>
-        </div>
-      </div>
-
-      {/* ── MAIN CONTENT ── */}
-      <div className="main">
+        {/* ── TODAY VIEW ────────────────────────────────────── */}
         {view === 'today' && (
           <>
-            <div className="section-header">
-              <div>
-                <h2 className="section-title">Today's Habits</h2>
-                <p className="section-sub">Track your daily progress</p>
+            {/* Stat cards */}
+            <div style={styles.statsGrid}>
+              <div style={{ ...styles.statCard, background: 'rgba(200,134,10,0.15)' }}>
+                <div style={styles.statLabel}>Completed</div>
+                <div style={{ ...styles.statVal, color: '#e8a830' }}>{completedCount}</div>
+                <div style={{ ...styles.statSub, color: 'rgba(232,168,48,0.6)' }}>of {totalCount} habits</div>
               </div>
-              <div className="progress-badge">
-                {completedCount} / {totalCount} done
+              <div style={{ ...styles.statCard, background: 'rgba(13,74,92,0.35)' }}>
+                <div style={styles.statLabel}>Streak</div>
+                <div style={{ ...styles.statVal, color: '#4db8d4' }}>{streak}</div>
+                <div style={{ ...styles.statSub, color: 'rgba(77,184,212,0.6)' }}>days</div>
+              </div>
+              <div style={{ ...styles.statCard, background: 'rgba(92,46,10,0.45)' }}>
+                <div style={styles.statLabel}>Today</div>
+                <div style={{ ...styles.statVal, color: '#f5c96a' }}>{progressPercent}%</div>
+                <div style={{ ...styles.statSub, color: 'rgba(245,201,106,0.6)' }}>done</div>
               </div>
             </div>
 
-            <div className="grid">
-              {habits.map(habit => (
-                <HabitCard
-                  key={habit.id}
-                  name={habit.name}
-                  emoji={habit.emoji}
-                  goal={habit.goal}
-                  unit={habit.unit}
-                  done={completedToday.has(habit.id)}
-                  onComplete={() => handleComplete(habit.id)}
-                  onDelete={() => handleDelete(habit.id)}
-                />
-              ))}
-              <AddHabitForm onAdd={handleAdd} />
+            {/* Progress bar */}
+            <div style={styles.progSection}>
+              <div style={styles.progHeader}>
+                <span style={styles.progTitle}>Today's progress</span>
+                <span style={styles.progPct}>{progressPercent}%</span>
+              </div>
+              <div style={styles.progTrack}>
+                <div style={{ ...styles.progFill, width: `${progressPercent}%` }} />
+              </div>
+              {totalCount > 0 && completedCount === totalCount && (
+                <p style={styles.allDone}>All habits done! Amazing day!</p>
+              )}
             </div>
+
+            {/* Habit list */}
+            <div style={styles.sectionLabel}>Today's habits</div>
+            {habits.map((habit, i) => (
+              <HabitCard
+                key={habit.id}
+                name={habit.name}
+                emoji={habit.emoji}
+                goal={habit.goal}
+                unit={habit.unit}
+                done={completedToday.has(habit.id)}
+                accentColor={CARD_ACCENTS ? CARD_ACCENTS[i % CARD_ACCENTS.length] : undefined}
+                onComplete={() => handleComplete(habit.id)}
+                onDelete={() => handleDelete(habit.id)}
+              />
+            ))}
+
+            <AddHabitForm onAdd={handleAdd} habits={habits} />
           </>
         )}
 
+        {/* ── STATS VIEW ────────────────────────────────────── */}
         {view === 'stats' && (
-          <>
-            <div className="section-header">
-              <div>
-                <h2 className="section-title">Weekly Overview</h2>
-                <p className="section-sub">Your performance over the last 7 days</p>
-              </div>
-            </div>
-            <WeeklyStats
-              streak={streak}
-              weeklyData={weeklyData}
-              habitStats={habitStats}
-            />
-          </>
+          <WeeklyStats streak={streak} weeklyData={weeklyData} habitStats={habitStats} />
         )}
-      </div>
 
-      {/* ── FOOTER ── */}
-      <footer className="footer">
-        <span className="footer-text">💪 FitBuddy — Build your best self, one habit at a time.</span>
-      </footer>
+        {/* ── POMODORO VIEW ─────────────────────────────────── */}
+        {view === 'pomodoro' && <PomodoroTimer />}
+      </main>
     </div>
   );
 }
+
+const styles = {
+  centered: {
+    textAlign: 'center', padding: '80px 20px',
+    fontFamily: "'DM Sans', sans-serif", color: '#f5ede0',
+    position: 'relative', zIndex: 1,
+  },
+  shell: {
+    display: 'grid', gridTemplateColumns: '240px 1fr',
+    minHeight: '100vh', maxWidth: '1100px',
+    margin: '0 auto', position: 'relative', zIndex: 1,
+  },
+
+  /* Sidebar */
+  sidebar: {
+    padding: '32px 20px', display: 'flex', flexDirection: 'column', gap: '6px',
+    position: 'sticky', top: 0, height: '100vh',
+    background: 'rgba(30,12,3,0.55)',
+    backdropFilter: 'blur(28px)', WebkitBackdropFilter: 'blur(28px)',
+    borderRight: '1px solid rgba(200,134,10,0.15)',
+    overflow: 'hidden',
+  },
+  logo: {
+    fontFamily: 'Syne, sans-serif', fontSize: '22px', fontWeight: 800,
+    color: '#f5ede0', marginBottom: '28px', display: 'flex', alignItems: 'center', gap: '10px',
+  },
+  logoDot: {
+    width: '10px', height: '10px', borderRadius: '50%',
+    background: 'linear-gradient(135deg,#c8860a,#2a8fa8)',
+    boxShadow: '0 0 16px rgba(200,134,10,0.7)',
+  },
+  navItem: {
+    display: 'flex', alignItems: 'center', gap: '12px',
+    padding: '10px 14px', borderRadius: '12px',
+    fontSize: '14px', fontWeight: '500', color: '#c4a882',
+    cursor: 'pointer', border: '1px solid transparent', transition: 'all 0.2s',
+  },
+  navActive: {
+    color: '#f5ede0', background: 'rgba(200,134,10,0.12)',
+    borderColor: 'rgba(200,134,10,0.22)',
+  },
+  navDot: { width: '7px', height: '7px', borderRadius: '50%', flexShrink: 0 },
+  sidebarBottom: { marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' },
+
+  profileCard: {
+    display: 'flex', alignItems: 'center', gap: '12px',
+    padding: '12px 14px',
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(138,171,138,0.2)',
+    borderRadius: '14px',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+  },
+  profileImgRing: {
+    position: 'relative', flexShrink: 0,
+    width: '46px', height: '46px',
+  },
+  profilePhoto: {
+    width: '46px', height: '46px',
+    borderRadius: '50%',
+    objectFit: 'cover', objectPosition: 'center top',
+    display: 'block',
+    border: '2px solid rgba(138,171,138,0.45)',
+    boxShadow: '0 0 14px rgba(138,171,138,0.2)',
+  },
+  profileFallback: {
+    width: '46px', height: '46px', borderRadius: '50%',
+    alignItems: 'center', justifyContent: 'center',
+    fontSize: '22px', background: 'rgba(138,171,138,0.12)',
+    border: '2px solid rgba(138,171,138,0.3)',
+  },
+  profileOnline: {
+    position: 'absolute', bottom: '1px', right: '1px',
+    width: '10px', height: '10px', borderRadius: '50%',
+    background: '#8aab8a',
+    border: '2px solid rgba(30,12,3,0.9)',
+    boxShadow: '0 0 6px rgba(138,171,138,0.6)',
+  },
+  profileInfo: { flex: 1, minWidth: 0 },
+  profileName: { fontSize: '13px', fontWeight: '500', color: '#f5ede0', marginBottom: '2px', textTransform: 'capitalize' },
+  profileSub: { fontSize: '11px', color: '#8a7060' },
+  profileBadge: {
+    fontSize: '14px', color: '#e8a830',
+    flexShrink: 0, opacity: 0.7,
+  },
+  streakPill: {
+    background: 'rgba(13,74,92,0.35)', backdropFilter: 'blur(12px)',
+    border: '1px solid rgba(42,143,168,0.3)', borderRadius: '16px', padding: '16px',
+  },
+  streakNum: {
+    fontFamily: 'Syne, sans-serif', fontSize: '28px', fontWeight: 800,
+    background: 'linear-gradient(90deg,#e8a830,#4db8d4)',
+    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+  },
+  streakLabel: { fontSize: '12px', color: '#4db8d4', marginTop: '2px', opacity: 0.8 },
+  streakTrack: { height: '4px', background: 'rgba(42,143,168,0.2)', borderRadius: '99px', overflow: 'hidden', marginTop: '10px' },
+  streakFill: { height: '100%', background: 'linear-gradient(90deg,#c8860a,#2a8fa8)', borderRadius: '99px' },
+
+  // ADDED: Logout Button Style
+  logoutBtn: {
+    marginTop: '4px',
+    background: 'rgba(255, 68, 68, 0.08)',
+    color: '#ff6b6b',
+    border: '1px solid rgba(255, 68, 68, 0.15)',
+    padding: '10px',
+    borderRadius: '12px',
+    cursor: 'pointer',
+    fontWeight: '600',
+    fontSize: '13px',
+    width: '100%',
+    transition: 'background 0.2s',
+  },
+
+  /* Main */
+  main: { padding: '32px 36px', overflowY: 'auto' },
+  pageHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' },
+  hi: { display: 'block', fontSize: '13px', color: '#8a7060', marginBottom: '4px' },
+  pageTitle: {
+    fontFamily: 'Syne, sans-serif', fontSize: '30px', fontWeight: 800,
+    background: 'linear-gradient(90deg,#f5ede0 20%,#e8a830,#4db8d4)',
+    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+  },
+  dateBadge: {
+    background: 'rgba(200,134,10,0.1)', backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(200,134,10,0.2)', borderRadius: '8px',
+    padding: '6px 12px', fontSize: '12px', color: '#f5c96a', whiteSpace: 'nowrap',
+  },
+
+  /* Stat cards */
+  statsGrid: { display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '14px', marginBottom: '20px' },
+  statCard: {
+    borderRadius: '18px', padding: '18px',
+    backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+    border: '1px solid rgba(200,134,10,0.18)',
+  },
+  statLabel: { fontSize: '11px', color: '#8a7060', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' },
+  statVal: { fontFamily: 'Syne, sans-serif', fontSize: '30px', fontWeight: 800 },
+  statSub: { fontSize: '11px', marginTop: '2px' },
+
+  /* Progress bar */
+  progSection: { marginBottom: '20px' },
+  progHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' },
+  progTitle: { fontSize: '13px', fontWeight: '500', color: '#c4a882' },
+  progPct: { fontFamily: 'Syne, sans-serif', fontSize: '13px', fontWeight: 700, color: '#e8a830' },
+  progTrack: { height: '7px', background: 'rgba(255,255,255,0.06)', borderRadius: '99px', overflow: 'hidden', border: '1px solid rgba(200,134,10,0.1)' },
+  progFill: {
+    height: '100%', borderRadius: '99px',
+    background: 'linear-gradient(90deg,#c8860a,#1a6b82,#4db8d4)',
+    boxShadow: '0 0 14px rgba(42,143,168,0.4)', transition: 'width 0.5s ease',
+  },
+  allDone: { textAlign: 'center', color: '#8aab8a', fontWeight: '600', margin: '10px 0 0', fontSize: '14px' },
+
+  sectionLabel: {
+    fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em',
+    color: '#8a7060', fontWeight: '500', marginBottom: '12px',
+  },
+};
 
 export default App;

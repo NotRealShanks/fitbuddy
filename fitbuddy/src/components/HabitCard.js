@@ -1,132 +1,127 @@
-function HabitCard({ name, emoji, goal, unit, done, onComplete, onDelete }) {
+function HabitCard({ name, emoji, goal, unit, done, onComplete, onDelete, accentColor }) {
+  // Cycle through palette colours per card — caller can pass accentColor or we default
+  const accent = accentColor || '#e8a830';
+
   return (
     <div style={{
       ...styles.card,
-      borderColor: done ? 'rgba(255,107,0,0.4)' : 'rgba(255,255,255,0.08)',
+      borderColor: done ? 'rgba(138,171,138,0.5)' : 'rgba(138,171,138,0.28)',
       background: done
-        ? 'linear-gradient(135deg, rgba(255,107,0,0.12) 0%, rgba(255,107,0,0.05) 100%)'
-        : 'rgba(255,255,255,0.05)',
+        ? 'rgba(138,171,138,0.08)'
+        : 'rgba(50,22,6,0.52)',
+      boxShadow: done
+        ? '0 0 20px rgba(138,171,138,0.12), 0 4px 24px rgba(0,0,0,0.2)'
+        : '0 2px 12px rgba(0,0,0,0.2)',
     }}>
-      {/* Top row */}
-      <div style={styles.top}>
-        <div style={styles.emojiWrap}>
+      <div style={styles.header}>
+        <div style={{
+          ...styles.emojiWrap,
+          background: done ? 'rgba(138,171,138,0.15)' : 'rgba(138,171,138,0.08)',
+          boxShadow: done ? '0 0 10px rgba(138,171,138,0.15)' : 'none',
+        }}>
           <span style={styles.emoji}>{emoji}</span>
         </div>
         <div style={styles.info}>
-          <h3 style={{ ...styles.name, color: done ? '#ff8c3a' : '#fff' }}>{name}</h3>
-          <p style={styles.goal}>{goal} {unit} / day</p>
+          <h3 style={styles.name}>{name}</h3>
+          <p style={styles.goal}>Goal: {goal} {unit}</p>
         </div>
-        <div style={styles.topRight}>
-          {done && <span style={styles.badge}>✔ Done</span>}
-          <button style={styles.deleteBtn} onClick={onDelete}>✕</button>
-        </div>
+        {done && (
+          <span style={styles.badge}>Done</span>
+        )}
+        <button style={styles.deleteBtn} onClick={onDelete}>✕</button>
       </div>
 
-      {/* Divider */}
-      <div style={styles.divider} />
-
-      {/* Bottom row */}
-      <div style={styles.bottom}>
-        <button
-          style={{
-            ...styles.button,
-            background: done
-              ? 'rgba(255,107,0,0.15)'
-              : 'linear-gradient(135deg, #ff6b00, #ff9500)',
-            color: done ? '#ff8c3a' : '#fff',
-            cursor: done ? 'default' : 'pointer',
-            boxShadow: done ? 'none' : '0 6px 20px rgba(255,107,0,0.4)',
-          }}
-          onClick={onComplete}
-          disabled={done}
-        >
-          {done ? '✔ Completed!' : '✓ Mark as Done'}
-        </button>
-
-        {/* Mini progress indicator */}
-        <div style={styles.statusDot(done)} />
-      </div>
+      <button
+        style={{
+          ...styles.button,
+          borderColor: done ? 'rgba(138,171,138,0.4)' : accent,
+          color: done ? '#8aab8a' : accent,
+          background: done ? 'rgba(138,171,138,0.08)' : 'transparent',
+          cursor: done ? 'default' : 'pointer',
+        }}
+        onClick={onComplete}
+        disabled={done}
+      >
+        {done ? '✔ Completed' : '✓ Mark Done'}
+      </button>
     </div>
   );
 }
 
+// Accent colour palette — assign by index in App.js
+export const CARD_ACCENTS = [
+  '#e8a830', // gold
+  '#4db8d4', // teal
+  '#7dab8a', // sage
+  '#d4956a', // terracotta
+  '#f5c96a', // pale gold
+  '#2a8fa8', // deep teal
+  '#c8860a', // amber
+  '#8aab8a', // sage green
+];
+
 const styles = {
   card: {
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: '20px',
-    padding: '22px 24px',
+    border: '1px solid rgba(138,171,138,0.28)',
+    borderRadius: '16px',
+    padding: '14px 16px',
+    marginBottom: '10px',
+    backdropFilter: 'blur(18px)',
+    WebkitBackdropFilter: 'blur(18px)',
     transition: 'all 0.3s ease',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    cursor: 'default',
   },
-  top: {
+  header: {
     display: 'flex',
     alignItems: 'center',
-    gap: '14px',
-    marginBottom: '16px',
+    gap: '12px',
+    marginBottom: '12px',
   },
   emojiWrap: {
-    width: '52px',
-    height: '52px',
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: '14px',
+    width: '42px',
+    height: '42px',
+    borderRadius: '12px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    border: '1px solid rgba(138,171,138,0.2)',
     flexShrink: 0,
+    transition: 'all 0.3s ease',
   },
-  emoji: { fontSize: '26px' },
-  info: { flex: 1 },
-  name: { margin: '0 0 4px', fontSize: '17px', fontWeight: '700' },
-  goal: { color: 'rgba(255,255,255,0.35)', margin: 0, fontSize: '13px' },
-  topRight: { display: 'flex', alignItems: 'center', gap: '8px' },
+  emoji: { fontSize: '20px' },
+  info: { flex: 1, minWidth: 0 },
+  name: { margin: '0 0 2px', fontSize: '14px', fontWeight: '500', color: '#f5ede0' },
+  goal: { margin: 0, fontSize: '12px', color: '#8a7060' },
   badge: {
-    backgroundColor: 'rgba(255,107,0,0.18)',
-    color: '#ff8c3a',
     fontSize: '11px',
-    fontWeight: '700',
-    padding: '4px 12px',
+    fontWeight: '500',
+    color: '#8aab8a',
+    background: 'rgba(138,171,138,0.12)',
+    border: '1px solid rgba(138,171,138,0.3)',
+    padding: '3px 10px',
     borderRadius: '99px',
-    letterSpacing: '0.3px',
+    whiteSpace: 'nowrap',
   },
   deleteBtn: {
-    background: 'rgba(255,255,255,0.06)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    color: 'rgba(255,255,255,0.3)',
-    fontSize: '12px',
+    background: 'none',
+    border: 'none',
+    color: '#8a7060',
+    fontSize: '13px',
     cursor: 'pointer',
-    padding: '4px 8px',
-    borderRadius: '8px',
-    transition: 'all 0.2s',
-  },
-  divider: {
-    height: '1px',
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    marginBottom: '16px',
-  },
-  bottom: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    padding: '4px',
+    borderRadius: '6px',
+    transition: 'color 0.2s',
+    flexShrink: 0,
   },
   button: {
-    border: 'none',
-    borderRadius: '12px',
-    padding: '11px 28px',
-    fontSize: '14px',
-    fontWeight: '700',
+    width: '100%',
+    border: '1.5px solid',
+    borderRadius: '10px',
+    padding: '8px',
+    fontSize: '13px',
+    fontWeight: '500',
+    fontFamily: 'inherit',
     transition: 'all 0.2s',
-    letterSpacing: '0.3px',
   },
-  statusDot: (done) => ({
-    width: '10px',
-    height: '10px',
-    borderRadius: '50%',
-    backgroundColor: done ? '#ff6b00' : 'rgba(255,255,255,0.12)',
-    boxShadow: done ? '0 0 10px rgba(255,107,0,0.7)' : 'none',
-    transition: 'all 0.3s',
-  }),
 };
 
 export default HabitCard;
