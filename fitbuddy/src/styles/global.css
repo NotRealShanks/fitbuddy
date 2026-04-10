@@ -35,6 +35,9 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.25); border-radius: 99px; }
 
+/* Hide scrollbar inside drum pickers */
+.scroll-drum::-webkit-scrollbar { display: none; }
+
 /* Injected background orbs - Midnight Aurora Theme */
 #fitbuddy-orbs {
   position: fixed;
