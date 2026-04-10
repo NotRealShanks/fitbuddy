@@ -84,7 +84,7 @@ function PomodoroTimer() {
           <circle
             cx="65" cy="65" r={R}
             fill="none"
-            stroke="rgba(138,171,138,0.1)"
+            stroke="rgba(255, 255, 255, 0.05)"
             strokeWidth="7"
           />
           {/* Progress */}
@@ -100,8 +100,8 @@ function PomodoroTimer() {
           />
           <defs>
             <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#c8860a" />
-              <stop offset="100%" stopColor="#4db8d4" />
+              <stop offset="0%" stopColor="var(--color-accent-secondary)" />
+              <stop offset="100%" stopColor="var(--color-accent-primary)" />
             </linearGradient>
           </defs>
         </svg>
@@ -128,7 +128,7 @@ function PomodoroTimer() {
       </div>
 
       {/* Sessions count */}
-      <p style={styles.sessions}>🔥 Sessions today: <strong style={{ color: '#e8a830' }}>{sessions}</strong></p>
+      <p style={styles.sessions}>🔥 Sessions today: <strong style={{ color: 'var(--color-accent-primary)' }}>{sessions}</strong></p>
 
       {!running && seconds === 0 && (
         <p style={styles.done}>✅ Session complete!</p>
@@ -139,31 +139,35 @@ function PomodoroTimer() {
 
 const styles = {
   card: {
-    background: 'rgba(40,18,4,0.65)',
-    border: '1px solid rgba(138,171,138,0.28)',
+    background: 'rgba(11,12,16,0.65)',
+    border: '1px solid var(--color-border)',
     borderRadius: '16px',
     padding: '24px 20px',
     textAlign: 'center',
     backdropFilter: 'blur(20px)',
     WebkitBackdropFilter: 'blur(20px)',
     marginBottom: '16px',
+    maxWidth: '480px',
+    margin: '0 auto 16px',
+    boxSizing: 'border-box',
+    width: '100%',
   },
   title: {
     fontSize: '15px', fontWeight: '600',
-    color: '#f5ede0', marginBottom: '16px',
+    color: 'var(--color-text-main)', marginBottom: '16px',
     textTransform: 'uppercase', letterSpacing: '0.08em',
   },
   input: {
     width: '100%', padding: '10px 12px',
     background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(138,171,138,0.25)',
+    border: '1px solid var(--color-border)',
     borderRadius: '8px', fontSize: '13px',
-    color: '#f5ede0', fontFamily: 'inherit',
+    color: 'var(--color-text-main)', fontFamily: 'inherit',
     marginBottom: '8px', outline: 'none',
     boxSizing: 'border-box',
   },
   activeName: {
-    fontSize: '13px', color: '#8aab8a',
+    fontSize: '13px', color: 'var(--color-accent-primary)',
     fontWeight: '500', marginBottom: '10px',
   },
   ringWrap: {
@@ -174,7 +178,7 @@ const styles = {
   timerText: {
     position: 'absolute',
     fontSize: '26px', fontWeight: '700',
-    color: '#f5ede0', fontFamily: 'Syne, sans-serif',
+    color: 'var(--color-text-main)', fontFamily: 'Syne, sans-serif',
     letterSpacing: '0.02em',
   },
   buttons: {
@@ -182,28 +186,30 @@ const styles = {
     gap: '8px', marginBottom: '14px',
   },
   btn: {
-    padding: '8px 16px', borderRadius: '8px',
+    padding: '10px 20px', borderRadius: '8px',
     fontSize: '13px', fontWeight: '500',
     cursor: 'pointer', fontFamily: 'inherit',
     border: '1.5px solid', transition: 'all 0.2s',
+    flex: 1,
+    minWidth: '80px',
   },
   startBtn: {
-    background: 'rgba(138,171,138,0.15)',
-    borderColor: 'rgba(138,171,138,0.45)',
-    color: '#8aab8a',
+    background: 'rgba(0, 229, 255, 0.15)',
+    borderColor: 'rgba(0, 229, 255, 0.45)',
+    color: 'var(--color-accent-primary)',
   },
   pauseBtn: {
-    background: 'rgba(200,134,10,0.15)',
-    borderColor: 'rgba(200,134,10,0.4)',
-    color: '#e8a830',
+    background: 'rgba(244, 63, 94, 0.15)',
+    borderColor: 'rgba(244, 63, 94, 0.4)',
+    color: 'var(--color-accent-tertiary)',
   },
   resetBtn: {
-    background: 'rgba(77,184,212,0.12)',
-    borderColor: 'rgba(77,184,212,0.35)',
-    color: '#4db8d4',
+    background: 'rgba(124, 58, 237, 0.12)',
+    borderColor: 'rgba(124, 58, 237, 0.35)',
+    color: 'var(--color-accent-secondary)',
   },
-  sessions: { fontSize: '13px', color: '#8a7060' },
-  done: { marginTop: '10px', fontSize: '13px', color: '#8aab8a', fontWeight: '500' },
+  sessions: { fontSize: '13px', color: 'var(--color-text-faded)' },
+  done: { marginTop: '10px', fontSize: '13px', color: 'var(--color-accent-primary)', fontWeight: '500' },
 };
 
 export default PomodoroTimer;

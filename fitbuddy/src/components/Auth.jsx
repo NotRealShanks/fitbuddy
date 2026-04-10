@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import '../App.css'; 
+
 
 export default function Auth() {
   const location = useLocation();
@@ -79,13 +79,17 @@ export default function Auth() {
           setError("This account doesn't exist. Please sign up first.");
           break;
         case 'auth/invalid-credential':
+        case 'auth/wrong-password':
           setError("Incorrect credentials, or this account doesn't exist yet.");
+          break;
+        case 'auth/invalid-email':
+          setError("Please enter a valid email address format.");
           break;
         case 'auth/weak-password':
           setError('Your password must be at least 6 characters.');
           break;
         default:
-          setError('An error occurred. Please try again.');
+          setError('Invalid credentials entered or an error occurred. Please verify your details.');
       }
     }
   };
@@ -102,6 +106,24 @@ export default function Auth() {
 
       <div className={`auth-container-slide ${!isLogin ? 'right-panel-active' : ''}`} id="container">
         
+        {/* --- MOBILE TABS (Hidden on Desktop) --- */}
+        <div className="mobile-auth-tabs">
+          <button 
+            type="button"
+            className={`mobile-tab ${isLogin ? 'active' : ''}`} 
+            onClick={() => handleToggle(true)}
+          >
+            Log In
+          </button>
+          <button 
+            type="button"
+            className={`mobile-tab ${!isLogin ? 'active' : ''}`} 
+            onClick={() => handleToggle(false)}
+          >
+            Sign Up
+          </button>
+        </div>
+
         {/* SIGN UP FORM */}
         <div className="form-container sign-up-container">
           <form onSubmit={handleSubmit} className="slide-form" noValidate>
@@ -110,17 +132,17 @@ export default function Auth() {
             {error && !isLogin && <p className="auth-error-text">{error}</p>}
             
             <div className="floating-label-group">
-              <input type="text" id="su-name" placeholder=" " value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} />
+              <input type="text" id="su-name" placeholder=" " value={name} onChange={(e) => setName(e.target.value)} disabled={isLoading} className={error && !isLogin ? 'error-input' : ''} />
               <label htmlFor="su-name">Name</label>
             </div>
 
             <div className="floating-label-group">
-              <input type="email" id="su-email" placeholder=" " value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} />
+              <input type="email" id="su-email" placeholder=" " value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} className={error && !isLogin ? 'error-input' : ''} />
               <label htmlFor="su-email">Email Address</label>
             </div>
 
             <div className="floating-label-group">
-              <input type="password" id="su-pass" placeholder=" " value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} />
+              <input type="password" id="su-pass" placeholder=" " value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} className={error && !isLogin ? 'error-input' : ''} />
               <label htmlFor="su-pass">Password</label>
             </div>
 
@@ -136,12 +158,12 @@ export default function Auth() {
             {error && isLogin && <p className="auth-error-text">{error}</p>}
             
             <div className="floating-label-group">
-              <input type="email" id="si-email" placeholder=" " value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} />
+              <input type="email" id="si-email" placeholder=" " value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} className={error && isLogin ? 'error-input' : ''} />
               <label htmlFor="si-email">Email Address</label>
             </div>
 
             <div className="floating-label-group">
-              <input type="password" id="si-pass" placeholder=" " value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} />
+              <input type="password" id="si-pass" placeholder=" " value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} className={error && isLogin ? 'error-input' : ''} />
               <label htmlFor="si-pass">Password</label>
             </div>
 

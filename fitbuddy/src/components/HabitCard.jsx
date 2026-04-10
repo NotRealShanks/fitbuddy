@@ -5,19 +5,19 @@ function HabitCard({ name, emoji, goal, unit, done, onComplete, onDelete, accent
   return (
     <div style={{
       ...styles.card,
-      borderColor: done ? 'rgba(138,171,138,0.5)' : 'rgba(138,171,138,0.28)',
+      borderColor: done ? 'rgba(0, 229, 255, 0.5)' : 'var(--color-border)',
       background: done
-        ? 'rgba(138,171,138,0.08)'
-        : 'rgba(50,22,6,0.52)',
+        ? 'rgba(0, 229, 255, 0.08)'
+        : 'rgba(255,255,255,0.02)',
       boxShadow: done
-        ? '0 0 20px rgba(138,171,138,0.12), 0 4px 24px rgba(0,0,0,0.2)'
+        ? '0 0 20px rgba(0, 229, 255, 0.12), 0 4px 24px rgba(0,0,0,0.2)'
         : '0 2px 12px rgba(0,0,0,0.2)',
     }}>
       <div style={styles.header}>
         <div style={{
           ...styles.emojiWrap,
-          background: done ? 'rgba(138,171,138,0.15)' : 'rgba(138,171,138,0.08)',
-          boxShadow: done ? '0 0 10px rgba(138,171,138,0.15)' : 'none',
+          background: done ? 'rgba(0, 229, 255, 0.15)' : 'rgba(255,255,255,0.05)',
+          boxShadow: done ? '0 0 10px rgba(0, 229, 255, 0.15)' : 'none',
         }}>
           <span style={styles.emoji}>{emoji}</span>
         </div>
@@ -34,9 +34,9 @@ function HabitCard({ name, emoji, goal, unit, done, onComplete, onDelete, accent
       <button
         style={{
           ...styles.button,
-          borderColor: done ? 'rgba(138,171,138,0.4)' : accent,
-          color: done ? '#8aab8a' : accent,
-          background: done ? 'rgba(138,171,138,0.08)' : 'transparent',
+          borderColor: done ? 'rgba(0, 229, 255, 0.4)' : accent,
+          color: done ? '#00e5ff' : accent,
+          background: done ? 'rgba(0, 229, 255, 0.08)' : 'transparent',
           cursor: done ? 'default' : 'pointer',
         }}
         onClick={onComplete}
@@ -50,19 +50,19 @@ function HabitCard({ name, emoji, goal, unit, done, onComplete, onDelete, accent
 
 // Accent colour palette — assign by index in App.js
 export const CARD_ACCENTS = [
-  '#e8a830', // gold
-  '#4db8d4', // teal
-  '#7dab8a', // sage
-  '#d4956a', // terracotta
-  '#f5c96a', // pale gold
-  '#2a8fa8', // deep teal
-  '#c8860a', // amber
-  '#8aab8a', // sage green
+  '#00e5ff', /* neon cyan */
+  '#7c3aed', /* electric violet */
+  '#f43f5e', /* rose */
+  '#10b981', /* emerald */
+  '#8b5cf6', /* purple */
+  '#06b6d4', /* cyan */
+  '#d946ef', /* magenta */
+  '#14b8a6', /* teal */
 ];
 
 const styles = {
   card: {
-    border: '1px solid rgba(138,171,138,0.28)',
+    border: '1px solid var(--color-border)',
     borderRadius: '16px',
     padding: '14px 16px',
     marginBottom: '10px',
@@ -83,20 +83,20 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    border: '1px solid rgba(138,171,138,0.2)',
+    border: '1px solid var(--color-border)',
     flexShrink: 0,
     transition: 'all 0.3s ease',
   },
   emoji: { fontSize: '20px' },
   info: { flex: 1, minWidth: 0 },
-  name: { margin: '0 0 2px', fontSize: '14px', fontWeight: '500', color: '#f5ede0' },
-  goal: { margin: 0, fontSize: '12px', color: '#8a7060' },
+  name: { margin: '0 0 2px', fontSize: '14px', fontWeight: '500', color: 'var(--color-text-main)' },
+  goal: { margin: 0, fontSize: '12px', color: 'var(--color-text-faded)' },
   badge: {
     fontSize: '11px',
     fontWeight: '500',
-    color: '#8aab8a',
-    background: 'rgba(138,171,138,0.12)',
-    border: '1px solid rgba(138,171,138,0.3)',
+    color: '#00e5ff',
+    background: 'rgba(0, 229, 255, 0.12)',
+    border: '1px solid rgba(0, 229, 255, 0.3)',
     padding: '3px 10px',
     borderRadius: '99px',
     whiteSpace: 'nowrap',
@@ -104,7 +104,7 @@ const styles = {
   deleteBtn: {
     background: 'none',
     border: 'none',
-    color: '#8a7060',
+    color: 'var(--color-text-faded)',
     fontSize: '13px',
     cursor: 'pointer',
     padding: '4px',

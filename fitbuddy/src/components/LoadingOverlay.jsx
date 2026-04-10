@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../App.css';
+
 
 export default function LoadingOverlay({ messages }) {
   const [currentIndex, setCurrentIndex] = useState(0);
