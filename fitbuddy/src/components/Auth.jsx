@@ -1,3 +1,4 @@
+import '../styles/Auth.css';
 import LoadingOverlay from './LoadingOverlay';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';

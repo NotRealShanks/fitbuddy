@@ -1,0 +1,163 @@
+/* src/styles/PomodoroTimer.css */
+
+/* ── Card ─────────────────────────────────────────────── */
+.fb-pomodoro-card {
+  background: rgba(11, 12, 16, 0.65);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  max-width: 480px;
+  margin: 0 auto 16px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* ── Title & Input ────────────────────────────────────── */
+.fb-pomodoro-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-main);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.fb-pomodoro-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--color-text-main);
+  font-family: inherit;
+  margin-bottom: 16px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.fb-pomodoro-active-name {
+  font-size: 13px;
+  color: var(--color-accent-primary);
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+/* ── Drum Picker Layout ───────────────────────────────── */
+.fb-picker-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.fb-picker-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.fb-picker-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-faded);
+}
+
+.fb-picker-sep {
+  font-size: 36px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  color: var(--color-text-faded);
+  margin-bottom: 18px;
+  opacity: 0.5;
+}
+
+/* ── SVG Ring ─────────────────────────────────────────── */
+.fb-ring-wrap {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin: 16px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fb-timer-text {
+  position: absolute;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-text-main);
+  font-family: 'Syne', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* ── Control Buttons ──────────────────────────────────── */
+.fb-timer-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.fb-timer-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  border: 1.5px solid;
+  transition: all 0.2s;
+  flex: 1;
+  min-width: 80px;
+}
+
+.fb-timer-btn--start { background: rgba(0, 229, 255, 0.15);  border-color: rgba(0, 229, 255, 0.45);  color: var(--color-accent-primary); }
+.fb-timer-btn--pause { background: rgba(244, 63, 94, 0.15);  border-color: rgba(244, 63, 94, 0.4);   color: var(--color-accent-tertiary); }
+.fb-timer-btn--reset { background: rgba(124, 58, 237, 0.12); border-color: rgba(124, 58, 237, 0.35); color: var(--color-accent-secondary); }
+
+.fb-timer-btn:hover { opacity: 0.85; }
+
+/* ── Footer Labels ────────────────────────────────────── */
+.fb-timer-sessions { font-size: 13px; color: var(--color-text-faded); }
+.fb-timer-done     { margin-top: 10px; font-size: 13px; color: var(--color-accent-primary); font-weight: 500; }
+
+/* ── Mobile ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .fb-pomodoro-card {
+    padding: 16px 14px;
+    border-radius: 14px;
+  }
+
+  .fb-picker-sep {
+    font-size: 26px;
+  }
+
+  .fb-ring-wrap {
+    width: 110px;
+    height: 110px;
+  }
+
+  .fb-timer-text {
+    font-size: 22px;
+  }
+
+  .fb-timer-btn {
+    padding: 10px 12px;
+    font-size: 12px;
+    min-width: 70px;
+  }
+
+  .fb-pomodoro-input {
+    font-size: 16px; /* Prevent iOS auto-zoom */
+  }
+}

@@ -1,3 +1,4 @@
+import '../styles/AccountSettings.css';
 import LoadingOverlay from './LoadingOverlay';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -53,107 +54,107 @@ export default function AccountSettings() {
   };
 
   return (
-    <div style={styles.page}>
+    <div className="fb-settings-page">
       {isDeleting && <LoadingOverlay messages={deleteMessages} />}
 
       {/* Header */}
-      <div style={styles.header}>
-        <button style={styles.backBtn} onClick={() => navigate(-1)}>← Back</button>
-        <h1 style={styles.title}>Account Settings</h1>
+      <div className="fb-settings-header">
+        <button className="fb-settings-back-btn" onClick={() => navigate(-1)}>← Back</button>
+        <h1 className="fb-settings-title">Account Settings</h1>
       </div>
 
       {/* Profile Card */}
-      <div style={styles.card}>
-        <div style={styles.cardHeader}>
-          <span style={styles.cardIcon}>👤</span>
-          <h2 style={styles.cardTitle}>Profile</h2>
+      <div className="fb-settings-card">
+        <div className="fb-settings-card-header">
+          <span className="fb-settings-card-icon">👤</span>
+          <h2 className="fb-settings-card-title">Profile</h2>
         </div>
 
-        <div style={styles.avatarRow}>
-          <div style={styles.avatarWrap}>
+        <div className="fb-settings-avatar-row">
+          <div className="fb-avatar-wrap fb-avatar-wrap--sheet">
             <img
               src="/image.png"
               alt="Avatar"
-              style={styles.avatar}
+              className="fb-avatar fb-avatar--sheet"
               onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
             />
-            <div style={{ ...styles.avatarFallback, display: 'none' }}>🌿</div>
-            <div style={styles.onlineDot} />
+            <div className="fb-avatar-fallback fb-avatar-fallback--sheet" style={{ display: 'none' }}>🌿</div>
+            <div className="fb-status-dot fb-status-dot--sheet" />
           </div>
           <div>
-            <div style={styles.avatarName}>{user?.displayName || user?.email?.split('@')[0] || 'User'}</div>
-            <div style={styles.avatarEmail}>{user?.email}</div>
+            <div className="fb-profile-name fb-profile-name--sheet">{user?.displayName || user?.email?.split('@')[0] || 'User'}</div>
+            <div className="fb-profile-email">{user?.email}</div>
           </div>
         </div>
 
-        <label style={styles.label}>Display Name</label>
+        <label className="fb-settings-label">Display Name</label>
         <input
-          style={styles.input}
+          className="fb-settings-input"
           type="text"
           value={displayName}
           placeholder="Your name"
           onChange={e => setDisplayName(e.target.value)}
         />
 
-        <label style={styles.label}>New Password</label>
+        <label className="fb-settings-label">New Password</label>
         <input
-          style={styles.input}
+          className="fb-settings-input"
           type="password"
           value={newPassword}
           placeholder="Leave blank to keep current"
           onChange={e => setNewPassword(e.target.value)}
         />
 
-        {saveMsg   && <p style={styles.successMsg}>✅ {saveMsg}</p>}
-        {saveError && <p style={styles.errorMsg}>⚠️ {saveError}</p>}
+        {saveMsg   && <p className="fb-settings-msg-success">✅ {saveMsg}</p>}
+        {saveError && <p className="fb-settings-msg-error">⚠️ {saveError}</p>}
 
-        <button style={styles.saveBtn} onClick={handleSaveProfile}>
+        <button className="fb-settings-save-btn" onClick={handleSaveProfile}>
           Save Changes
         </button>
       </div>
 
       {/* App Info Card */}
-      <div style={styles.card}>
-        <div style={styles.cardHeader}>
-          <span style={styles.cardIcon}>ℹ️</span>
-          <h2 style={styles.cardTitle}>About FitBuddy</h2>
+      <div className="fb-settings-card">
+        <div className="fb-settings-card-header">
+          <span className="fb-settings-card-icon">ℹ️</span>
+          <h2 className="fb-settings-card-title">About FitBuddy</h2>
         </div>
-        <div style={styles.infoRow}><span style={styles.infoLabel}>Version</span><span style={styles.infoVal}>1.0.0</span></div>
-        <div style={styles.infoRow}><span style={styles.infoLabel}>Stack</span><span style={styles.infoVal}>React + Firebase</span></div>
-        <div style={styles.infoRow}><span style={styles.infoLabel}>Theme</span><span style={styles.infoVal}>Midnight Aurora</span></div>
+        <div className="fb-settings-info-row"><span className="fb-settings-info-label">Version</span><span className="fb-settings-info-val">1.0.0</span></div>
+        <div className="fb-settings-info-row"><span className="fb-settings-info-label">Stack</span><span className="fb-settings-info-val">React + Firebase</span></div>
+        <div className="fb-settings-info-row"><span className="fb-settings-info-label">Theme</span><span className="fb-settings-info-val">Midnight Aurora</span></div>
       </div>
 
       {/* Danger Zone */}
-      <div style={{ ...styles.card, borderColor: 'rgba(244,63,94,0.35)', background: 'rgba(244,63,94,0.05)' }}>
-        <div style={styles.cardHeader}>
-          <span style={styles.cardIcon}>⚠️</span>
-          <h2 style={{ ...styles.cardTitle, color: 'var(--color-accent-tertiary)' }}>Danger Zone</h2>
+      <div className="fb-settings-card fb-settings-card--danger">
+        <div className="fb-settings-card-header">
+          <span className="fb-settings-card-icon">⚠️</span>
+          <h2 className="fb-settings-card-title fb-settings-card-title--danger">Danger Zone</h2>
         </div>
-        <p style={{ fontSize: '13px', color: 'var(--color-text-faded)', marginBottom: '16px', lineHeight: 1.6 }}>
+        <p className="fb-settings-danger-desc">
           Once you delete your account, there is no going back. All your habits,
           progress and history will be permanently erased from FitBuddy.
         </p>
-        <button style={styles.deleteBtn} onClick={() => setShowDeleteModal(true)}>
+        <button className="fb-settings-delete-btn" onClick={() => setShowDeleteModal(true)}>
           🗑️ Delete My Account
         </button>
       </div>
 
       {/* Confirmation Modal */}
       {showDeleteModal && (
-        <div style={styles.overlay}>
-          <div style={styles.modal}>
-            <div style={{ fontSize: '40px', marginBottom: '12px' }}>⚠️</div>
-            <h3 style={{ fontFamily: 'Syne, sans-serif', fontSize: '18px', fontWeight: 700, color: 'var(--color-text-main)', marginBottom: '10px' }}>
+        <div className="fb-modal-overlay">
+          <div className="fb-modal-box">
+            <div className="fb-modal-icon">⚠️</div>
+            <h3 className="fb-modal-title">
               Are you absolutely sure?
             </h3>
-            <p style={{ fontSize: '13px', color: 'var(--color-text-faded)', lineHeight: 1.6, marginBottom: '24px' }}>
+            <p className="fb-modal-desc">
               This will permanently delete your FitBuddy account and all your data. This cannot be undone.
             </p>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button style={styles.cancelBtn} onClick={() => setShowDeleteModal(false)} disabled={isDeleting}>
+            <div className="fb-modal-actions">
+              <button className="fb-modal-cancel-btn" onClick={() => setShowDeleteModal(false)} disabled={isDeleting}>
                 Cancel
               </button>
-              <button style={styles.confirmDeleteBtn} onClick={handleDeleteAccount} disabled={isDeleting}>
+              <button className="fb-modal-confirm-btn" onClick={handleDeleteAccount} disabled={isDeleting}>
                 {isDeleting ? 'Deleting...' : 'Yes, delete'}
               </button>
             </div>
@@ -163,163 +164,3 @@ export default function AccountSettings() {
     </div>
   );
 }
-
-const styles = {
-  page: {
-    maxWidth: '560px',
-    margin: '0 auto',
-    padding: '32px 24px 80px',
-    fontFamily: 'Inter, sans-serif',
-    position: 'relative',
-    zIndex: 1,
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-    marginBottom: '28px',
-  },
-  backBtn: {
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid var(--color-border)',
-    borderRadius: '8px',
-    padding: '8px 14px',
-    color: 'var(--color-text-faded)',
-    fontSize: '13px',
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-  },
-  title: {
-    fontFamily: 'Syne, sans-serif',
-    fontSize: '22px',
-    fontWeight: 800,
-    background: 'linear-gradient(90deg, var(--color-text-main), var(--color-accent-primary))',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    margin: 0,
-  },
-  card: {
-    background: 'rgba(255,255,255,0.03)',
-    border: '1px solid var(--color-border)',
-    borderRadius: '20px',
-    padding: '22px',
-    marginBottom: '16px',
-    backdropFilter: 'blur(16px)',
-  },
-  cardHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    marginBottom: '18px',
-  },
-  cardIcon: { fontSize: '18px' },
-  cardTitle: {
-    fontFamily: 'Syne, sans-serif',
-    fontSize: '16px',
-    fontWeight: 700,
-    color: 'var(--color-text-main)',
-    margin: 0,
-  },
-  avatarRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '14px',
-    marginBottom: '20px',
-    padding: '12px',
-    background: 'rgba(255,255,255,0.03)',
-    borderRadius: '12px',
-    border: '1px solid var(--color-border)',
-  },
-  avatarWrap: { position: 'relative', flexShrink: 0 },
-  avatar: { width: '52px', height: '52px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(0,229,255,0.35)', display: 'block' },
-  avatarFallback: { width: '52px', height: '52px', borderRadius: '50%', alignItems: 'center', justifyContent: 'center', fontSize: '24px', background: 'rgba(255,255,255,0.05)', border: '2px solid rgba(0,229,255,0.3)' },
-  onlineDot: { position: 'absolute', bottom: '2px', right: '2px', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--color-accent-primary)', border: '2px solid var(--color-bg-dark)', boxShadow: '0 0 6px rgba(0,229,255,0.6)' },
-  avatarName: { fontSize: '14px', fontWeight: '600', color: 'var(--color-text-main)', marginBottom: '2px' },
-  avatarEmail: { fontSize: '12px', color: 'var(--color-text-faded)' },
-  label: {
-    display: 'block',
-    fontSize: '11px',
-    fontWeight: '600',
-    color: 'var(--color-text-faded)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.06em',
-    marginBottom: '6px',
-    marginTop: '14px',
-  },
-  input: {
-    width: '100%',
-    padding: '11px 14px',
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid var(--color-border)',
-    borderRadius: '10px',
-    fontSize: '14px',
-    color: 'var(--color-text-main)',
-    fontFamily: 'inherit',
-    boxSizing: 'border-box',
-    outline: 'none',
-  },
-  saveBtn: {
-    marginTop: '18px',
-    width: '100%',
-    padding: '12px',
-    background: 'rgba(0,229,255,0.12)',
-    border: '1px solid rgba(0,229,255,0.4)',
-    borderRadius: '10px',
-    color: 'var(--color-accent-primary)',
-    fontFamily: 'Syne, sans-serif',
-    fontSize: '14px',
-    fontWeight: '700',
-    cursor: 'pointer',
-    letterSpacing: '0.04em',
-  },
-  successMsg: { fontSize: '13px', color: 'var(--color-accent-primary)', marginTop: '10px' },
-  errorMsg: { fontSize: '13px', color: 'var(--color-accent-tertiary)', marginTop: '10px' },
-  infoRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' },
-  infoLabel: { fontSize: '13px', color: 'var(--color-text-faded)' },
-  infoVal: { fontSize: '13px', fontWeight: '600', color: 'var(--color-text-main)' },
-  deleteBtn: {
-    width: '100%',
-    padding: '12px',
-    background: 'rgba(244,63,94,0.12)',
-    border: '1px solid rgba(244,63,94,0.4)',
-    borderRadius: '10px',
-    color: 'var(--color-accent-tertiary)',
-    fontFamily: 'Syne, sans-serif',
-    fontSize: '14px',
-    fontWeight: '700',
-    cursor: 'pointer',
-  },
-  overlay: {
-    position: 'fixed', inset: 0,
-    background: 'rgba(0,0,0,0.7)',
-    backdropFilter: 'blur(8px)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    zIndex: 9999, padding: '20px',
-  },
-  modal: {
-    background: 'rgba(15,15,20,0.95)',
-    border: '1px solid rgba(244,63,94,0.3)',
-    borderRadius: '24px',
-    padding: '32px 28px',
-    maxWidth: '360px',
-    width: '100%',
-    textAlign: 'center',
-    boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
-  },
-  cancelBtn: {
-    flex: 1, padding: '12px',
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid var(--color-border)',
-    borderRadius: '10px',
-    color: 'var(--color-text-faded)',
-    fontSize: '14px', cursor: 'pointer', fontFamily: 'inherit',
-  },
-  confirmDeleteBtn: {
-    flex: 1, padding: '12px',
-    background: 'rgba(244,63,94,0.15)',
-    border: '1px solid rgba(244,63,94,0.5)',
-    borderRadius: '10px',
-    color: 'var(--color-accent-tertiary)',
-    fontSize: '14px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit',
-  },
-};

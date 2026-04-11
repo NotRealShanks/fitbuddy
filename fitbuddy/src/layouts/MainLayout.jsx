@@ -1,3 +1,4 @@
+import '../styles/MainLayout.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
@@ -44,8 +45,8 @@ export default function MainLayout({ children, user, streak, view, setView }) {
 
       {/* ────────────────── DESKTOP SIDEBAR ────────────────── */}
       <aside className="fb-sidebar">
-        <div className="fb-logo" style={{ fontFamily: 'Syne, sans-serif', fontSize: '22px', fontWeight: 800, color: 'var(--color-text-main)', marginBottom: '28px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--color-accent-secondary), var(--color-accent-primary))', boxShadow: '0 0 16px rgba(0, 229, 255, 0.7)' }} /> FitBuddy
+        <div className="fb-sidebar-brand">
+          <div className="fb-sidebar-brand-dot" /> FitBuddy
         </div>
 
         {NAV.map(n => (
@@ -60,7 +61,7 @@ export default function MainLayout({ children, user, streak, view, setView }) {
           </div>
         ))}
 
-        <div className="fb-sidebar-bottom" style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div className="fb-sidebar-bottom">
           {/* Streak Card */}
           <div className="fb-streak-card">
             <div className="fb-streak-card__glow" />
@@ -80,22 +81,22 @@ export default function MainLayout({ children, user, streak, view, setView }) {
           {/* Desktop Profile Card */}
           <div style={{ position: 'relative', marginTop: '10px' }}>
             <div
-              className="fb-profile-card"
+              className={`fb-profile-card ${isMenuOpen ? 'active' : ''}`}
               style={{ borderColor: isMenuOpen ? 'var(--color-accent-primary)' : 'var(--color-border)', transition: 'border-color 0.2s' }}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              <div style={{ position: 'relative', flexShrink: 0, width: '46px', height: '46px' }}>
-                <img src="/image.png" alt="Profile" style={{ width: '46px', height: '46px', borderRadius: '50%', objectFit: 'cover', display: 'block', border: '2px solid rgba(255,255,255,0.1)' }}
+              <div className="fb-avatar-wrap fb-avatar-wrap--desktop">
+                <img src="/image.png" alt="Profile" className="fb-avatar fb-avatar--desktop"
                   onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
                 />
-                <div style={{ display: 'none', width: '46px', height: '46px', borderRadius: '50%', alignItems: 'center', justifyContent: 'center', fontSize: '22px', background: 'rgba(255,255,255,0.05)' }}>🌿</div>
-                <div style={{ position: 'absolute', bottom: '1px', right: '1px', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--color-accent-primary)', border: '2px solid var(--color-bg-dark)', boxShadow: '0 0 6px rgba(0,229,255,0.6)' }} />
+                <div className="fb-avatar-fallback fb-avatar-fallback--desktop" style={{ display: 'none' }}>🌿</div>
+                <div className="fb-status-dot fb-status-dot--desktop" />
               </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: '13px', fontWeight: '500', color: 'var(--color-text-main)', marginBottom: '2px', textTransform: 'capitalize' }}>{displayName}</div>
-                <div style={{ fontSize: '11px', color: 'var(--color-text-faded)' }}>Habit Tracker</div>
+              <div className="fb-profile-info">
+                <div className="fb-profile-name fb-profile-name--desktop">{displayName}</div>
+                <div className="fb-profile-role">Habit Tracker</div>
               </div>
-              <div style={{ fontSize: '14px', color: 'var(--color-text-faded)', flexShrink: 0, opacity: 0.7, transition: 'transform 0.2s', transform: isMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▲</div>
+              <div className="fb-profile-chevron" style={{ transform: isMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▲</div>
             </div>
 
             {isMenuOpen && (
@@ -115,32 +116,36 @@ export default function MainLayout({ children, user, streak, view, setView }) {
 
       {/* ─── MOBILE-ONLY TOP HEADER ─── */}
       <div className="fb-mobile-header">
-        {/* Tappable profile area — opens bottom sheet on mobile */}
-        <div
-          className="fb-mobile-header__left fb-mobile-header__left--tappable"
-          onClick={() => setIsMobileMenuOpen(true)}
-          role="button"
-          aria-label="Open profile menu"
-        >
-          <div style={{ position: 'relative', flexShrink: 0 }}>
-            <img
-              src="/image.png"
-              alt="Profile"
-              style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', display: 'block', border: '2px solid rgba(0,229,255,0.3)' }}
-              onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
-            />
-            <div style={{ display: 'none', width: '36px', height: '36px', borderRadius: '50%', alignItems: 'center', justifyContent: 'center', fontSize: '18px', background: 'rgba(255,255,255,0.05)', border: '2px solid rgba(0,229,255,0.3)' }}>🌿</div>
-            <div style={{ position: 'absolute', bottom: '1px', right: '1px', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-accent-primary)', border: '2px solid var(--color-bg-dark)' }} />
-          </div>
-          <div>
-            <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text-main)' }}>{displayName}</div>
+        {/* Brand name on the left */}
+        <div className="fb-mobile-header__left">
+          <div className="fb-mobile-brand">
+            <div className="fb-sidebar-brand-dot" />
+            <span>FitBuddy</span>
           </div>
         </div>
 
+        {/* Profile avatar + streak on the right */}
         <div className="fb-mobile-header__right">
           <div className="fb-streak-badge">
             <span className="fb-streak-badge__fire">🔥</span>
             <span className="fb-streak-badge__count">{streak}</span>
+          </div>
+          <div
+            className="fb-mobile-header__avatar-btn"
+            onClick={() => setIsMobileMenuOpen(true)}
+            role="button"
+            aria-label="Open profile menu"
+          >
+            <div className="fb-avatar-wrap fb-avatar-wrap--header">
+              <img
+                src="/image.png"
+                alt="Profile"
+                className="fb-avatar fb-avatar--header"
+                onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
+              />
+              <div className="fb-avatar-fallback fb-avatar-fallback--header" style={{ display: 'none' }}>🌿</div>
+              <div className="fb-status-dot fb-status-dot--header" />
+            </div>
           </div>
         </div>
       </div>
@@ -154,17 +159,17 @@ export default function MainLayout({ children, user, streak, view, setView }) {
 
             {/* User info header */}
             <div className="fb-bottom-sheet__user">
-              <div style={{ position: 'relative', flexShrink: 0 }}>
+              <div className="fb-avatar-wrap fb-avatar-wrap--sheet">
                 <img src="/image.png" alt="Profile"
-                  style={{ width: '52px', height: '52px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(0,229,255,0.4)', display: 'block' }}
+                  className="fb-avatar fb-avatar--sheet"
                   onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
                 />
-                <div style={{ display: 'none', width: '52px', height: '52px', borderRadius: '50%', alignItems: 'center', justifyContent: 'center', fontSize: '24px', background: 'rgba(255,255,255,0.05)' }}>🌿</div>
-                <div style={{ position: 'absolute', bottom: '2px', right: '2px', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--color-accent-primary)', border: '2px solid var(--color-bg-dark)', boxShadow: '0 0 6px rgba(0,229,255,0.6)' }} />
+                <div className="fb-avatar-fallback fb-avatar-fallback--sheet" style={{ display: 'none' }}>🌿</div>
+                <div className="fb-status-dot fb-status-dot--sheet" />
               </div>
-              <div>
-                <div style={{ fontSize: '16px', fontWeight: '700', color: 'var(--color-text-main)', fontFamily: 'Syne, sans-serif' }}>{displayName}</div>
-                <div style={{ fontSize: '12px', color: 'var(--color-text-faded)', marginTop: '2px' }}>{user?.email}</div>
+              <div className="fb-profile-info">
+                <div className="fb-profile-name fb-profile-name--sheet">{displayName}</div>
+                <div className="fb-profile-email">{user?.email}</div>
               </div>
             </div>
 

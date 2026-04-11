@@ -4,10 +4,10 @@ import { Provider } from 'react-redux';
 import store from './store/store';
 import App from './App';
 
-// Import newly structured CSS
+// Global design tokens, resets, and layout structure
 import './styles/global.css';
 import './styles/layout.css';
-import './styles/components.css';
+// Component styles are imported directly in each component file
 
 // Remove legacy index.css if any
 // import './index.css';

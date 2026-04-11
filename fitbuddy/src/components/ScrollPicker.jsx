@@ -1,3 +1,4 @@
+import '../styles/ScrollPicker.css';
 import { useRef, useEffect, useCallback } from 'react';
 
 const ITEM_H = 50; // px per item slot
@@ -44,17 +45,17 @@ export default function ScrollPicker({ values, value, onChange }) {
   };
 
   return (
-    <div style={wrapStyle}>
+    <div className="fb-scroll-wrap">
       {/* Centre highlight bar */}
-      <div style={highlightStyle} />
+      <div className="fb-scroll-hl" />
 
       {/* Top fade */}
-      <div style={{ ...fadeStyle, top: 0, background: 'linear-gradient(to bottom, rgba(11,12,16,0.97) 0%, transparent 100%)' }} />
+      <div className="fb-scroll-fade" style={{ top: 0, background: 'linear-gradient(to bottom, rgba(11,12,16,0.97) 0%, transparent 100%)' }} />
       {/* Bottom fade */}
-      <div style={{ ...fadeStyle, bottom: 0, background: 'linear-gradient(to top,   rgba(11,12,16,0.97) 0%, transparent 100%)' }} />
+      <div className="fb-scroll-fade" style={{ bottom: 0, background: 'linear-gradient(to top,   rgba(11,12,16,0.97) 0%, transparent 100%)' }} />
 
       {/* Scrollable drum */}
-      <div ref={ref} onScroll={handleScroll} style={drumStyle}>
+      <div ref={ref} onScroll={handleScroll} className="fb-scroll-drum">
         {/* padding spacers so first/last values can reach centre */}
         <div style={{ height: ITEM_H * 2, flexShrink: 0 }} />
         {values.map((v, i) => {
@@ -66,23 +67,11 @@ export default function ScrollPicker({ values, value, onChange }) {
             <div
               key={v}
               onClick={() => scrollTo(i)}
+              className="fb-scroll-item"
               style={{
-                height: ITEM_H,
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                scrollSnapAlign: 'center',
-                fontFamily: 'Syne, sans-serif',
-                fontSize: '28px',
-                fontWeight: 700,
                 color,
                 opacity,
                 transform: `scale(${scale})`,
-                transition: 'opacity 0.15s, transform 0.15s, color 0.15s',
-                cursor: 'pointer',
-                userSelect: 'none',
-                letterSpacing: '0.02em',
               }}
             >
               {String(v).padStart(2, '0')}
@@ -94,46 +83,3 @@ export default function ScrollPicker({ values, value, onChange }) {
     </div>
   );
 }
-
-// ── Styles ─────────────────────────────────────────────
-const wrapStyle = {
-  position: 'relative',
-  height: ITEM_H * 5,   // shows 5 slots, middle = selected
-  width: '90px',
-  overflow: 'hidden',
-};
-
-const highlightStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '6px',
-  right: '6px',
-  height: ITEM_H,
-  transform: 'translateY(-50%)',
-  background: 'rgba(0, 229, 255, 0.07)',
-  border: '1.5px solid rgba(0, 229, 255, 0.2)',
-  borderRadius: '12px',
-  pointerEvents: 'none',
-  zIndex: 1,
-  boxShadow: '0 0 12px rgba(0,229,255,0.06) inset',
-};
-
-const fadeStyle = {
-  position: 'absolute',
-  left: 0,
-  right: 0,
-  height: '38%',
-  pointerEvents: 'none',
-  zIndex: 2,
-};
-
-const drumStyle = {
-  height: '100%',
-  overflowY: 'scroll',
-  scrollSnapType: 'y mandatory',
-  scrollbarWidth: 'none',          // Firefox
-  msOverflowStyle: 'none',         // IE
-  display: 'flex',
-  flexDirection: 'column',
-  WebkitOverflowScrolling: 'touch',  // iOS momentum
-};

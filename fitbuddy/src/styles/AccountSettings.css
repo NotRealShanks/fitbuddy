@@ -1,0 +1,306 @@
+/* src/styles/AccountSettings.css */
+
+/* ── Page Wrapper ─────────────────────────────────────── */
+.fb-settings-page {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ───────────────────────────────────────────── */
+.fb-settings-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.fb-settings-back-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  color: var(--color-text-faded);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.fb-settings-back-btn:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.fb-settings-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--color-text-main), var(--color-accent-primary));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+/* ── Cards ────────────────────────────────────────────── */
+.fb-settings-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 22px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(16px);
+}
+
+.fb-settings-card--danger {
+  border-color: rgba(244, 63, 94, 0.35);
+  background: rgba(244, 63, 94, 0.05);
+}
+
+.fb-settings-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.fb-settings-card-icon  { font-size: 18px; }
+
+.fb-settings-card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-main);
+  margin: 0;
+}
+
+.fb-settings-card-title--danger {
+  color: var(--color-accent-tertiary);
+}
+
+/* ── Avatar Row ───────────────────────────────────────── */
+.fb-settings-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+}
+
+/* ── Form Fields ──────────────────────────────────────── */
+.fb-settings-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-faded);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+  margin-top: 14px;
+}
+
+.fb-settings-input {
+  width: 100%;
+  padding: 11px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--color-text-main);
+  font-family: inherit;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.fb-settings-input:focus {
+  border-color: var(--color-accent-primary);
+}
+
+/* ── Save Button ──────────────────────────────────────── */
+.fb-settings-save-btn {
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px;
+  background: rgba(0, 229, 255, 0.12);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  border-radius: 10px;
+  color: var(--color-accent-primary);
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.2s;
+}
+
+.fb-settings-save-btn:hover {
+  background: rgba(0, 229, 255, 0.2);
+}
+
+/* ── Feedback Messages ────────────────────────────────── */
+.fb-settings-msg-success { font-size: 13px; color: var(--color-accent-primary);   margin-top: 10px; }
+.fb-settings-msg-error   { font-size: 13px; color: var(--color-accent-tertiary);  margin-top: 10px; }
+
+/* ── Info Rows ────────────────────────────────────────── */
+.fb-settings-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.fb-settings-info-label { font-size: 13px; color: var(--color-text-faded); }
+.fb-settings-info-val   { font-size: 13px; font-weight: 600; color: var(--color-text-main); }
+
+/* ── Danger Zone ──────────────────────────────────────── */
+.fb-settings-danger-desc {
+  font-size: 13px;
+  color: var(--color-text-faded);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.fb-settings-delete-btn {
+  width: 100%;
+  padding: 12px;
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  border-radius: 10px;
+  color: var(--color-accent-tertiary);
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.fb-settings-delete-btn:hover {
+  background: rgba(244, 63, 94, 0.2);
+}
+
+/* ── Confirmation Modal ───────────────────────────────── */
+.fb-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.fb-modal-box {
+  background: rgba(15, 15, 20, 0.95);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  border-radius: 24px;
+  padding: 32px 28px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: modalPop 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.fb-modal-icon  { font-size: 40px; margin-bottom: 12px; }
+
+.fb-modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-main);
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+
+.fb-modal-desc {
+  font-size: 13px;
+  color: var(--color-text-faded);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.fb-modal-actions { display: flex; gap: 12px; }
+
+.fb-modal-cancel-btn {
+  flex: 1;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  color: var(--color-text-faded);
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.fb-modal-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.fb-modal-confirm-btn {
+  flex: 1;
+  padding: 12px;
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.5);
+  border-radius: 10px;
+  color: var(--color-accent-tertiary);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.fb-modal-confirm-btn:hover {
+  background: rgba(244, 63, 94, 0.25);
+}
+
+/* ── Mobile ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .fb-settings-page {
+    padding: 20px 16px 100px;
+  }
+
+  .fb-settings-header {
+    margin-bottom: 20px;
+  }
+
+  .fb-settings-title {
+    font-size: 18px;
+  }
+
+  .fb-settings-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .fb-settings-input {
+    font-size: 16px; /* Prevent iOS auto-zoom */
+  }
+
+  .fb-modal-box {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+
+  .fb-modal-actions {
+    flex-direction: column;
+  }
+}

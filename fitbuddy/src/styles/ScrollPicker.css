@@ -1,0 +1,68 @@
+/* src/styles/ScrollPicker.css */
+
+/* ── Outer Wrapper ────────────────────────────────────── */
+.fb-scroll-wrap {
+  position: relative;
+  height: 250px; /* 5 slots × 50px each */
+  width: 90px;
+  overflow: hidden;
+}
+
+/* ── Centre Highlight Bar ─────────────────────────────── */
+.fb-scroll-hl {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  right: 6px;
+  height: 50px;
+  transform: translateY(-50%);
+  background: rgba(0, 229, 255, 0.07);
+  border: 1.5px solid rgba(0, 229, 255, 0.2);
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.06) inset;
+}
+
+/* ── Top / Bottom Fade Overlays ───────────────────────── */
+.fb-scroll-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 38%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Scrollable Drum ──────────────────────────────────── */
+.fb-scroll-drum {
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE */
+  display: flex;
+  flex-direction: column;
+  -webkit-overflow-scrolling: touch; /* iOS momentum */
+}
+
+.fb-scroll-drum::-webkit-scrollbar {
+  display: none; /* Chrome / Safari */
+}
+
+/* ── Individual Items ─────────────────────────────────── */
+.fb-scroll-item {
+  height: 50px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  transition: opacity 0.15s, transform 0.15s, color 0.15s;
+  cursor: pointer;
+  user-select: none;
+  letter-spacing: 0.02em;
+}

@@ -1,3 +1,4 @@
+import '../styles/DashboardPage.css';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -45,17 +46,17 @@ export default function DashboardPage({ user }) {
 
   if (loading) return (
     <div className="centered-container">
-      <p style={{ fontSize: '32px' }}>🌿</p>
-      <p style={{ color: '#8aab8a', marginTop: '8px' }}>Loading FitBuddy…</p>
+      <p className="fb-loading-icon">🌿</p>
+      <p className="fb-loading-text">Loading FitBuddy…</p>
     </div>
   );
 
   if (error) return (
     <div className="centered-container">
-      <p style={{ fontSize: '32px' }}>⚠️</p>
-      <p style={{ color: '#e8a830', fontWeight: '600' }}>{error}</p>
-      <p style={{ color: '#8a7060', fontSize: '13px', marginTop: '6px' }}>
-        Run <code style={{ color: '#4db8d4' }}>node server.js</code> in the fitbuddy-server folder
+      <p className="fb-error-icon">⚠️</p>
+      <p className="fb-error-text">{error}</p>
+      <p className="fb-error-sub">
+        Run <code className="fb-error-code">node server.js</code> in the fitbuddy-server folder
       </p>
     </div>
   );
@@ -64,18 +65,15 @@ export default function DashboardPage({ user }) {
     <MainLayout user={user} streak={streak} view={view} setView={setView}>
       <div className="dashboard-header">
         <div className="dashboard-title-group">
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: '6px',
-            fontSize: '13px', fontWeight: '600', letterSpacing: '0.04em',
-            background: greeting.gradient,
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            marginBottom: '4px',
-          }}>
-            {greeting.emoji} {greeting.text}
-          </span>
-          <div style={{ fontFamily: 'Syne, sans-serif', fontSize: '30px', fontWeight: 800, background: 'linear-gradient(90deg, var(--color-text-main) 20%, var(--color-accent-primary), var(--color-accent-secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Let's crush it.</div>
+          <div className="fb-dashboard-greeting-wrap">
+            <span>{greeting.emoji}</span>
+            <span className="fb-dashboard-greeting" style={{ '--greeting-gradient': greeting.gradient }}>
+              {greeting.text}
+            </span>
+          </div>
+          <div className="fb-dashboard-title">Let's crush it.</div>
         </div>
-        <div style={{ background: 'rgba(124,58,237,0.15)', backdropFilter: 'blur(10px)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', color: '#c4b5fd', whiteSpace: 'nowrap' }}>
+        <div className="fb-date-badge">
           {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
         </div>
       </div>
@@ -83,37 +81,37 @@ export default function DashboardPage({ user }) {
       {view === 'today' && (
         <>
           <div className="fb-stats-grid">
-            <div className="fb-stat-card" style={{ background: 'rgba(0, 229, 255, 0.1)' }}>
+            <div className="fb-stat-card fb-stat-card--primary">
               <div className="fb-stat-label">Completed</div>
               <div className="fb-stat-val" style={{ color: 'var(--color-accent-primary)' }}>{completedCount}</div>
-              <div style={{ fontSize: '11px', marginTop: '2px', color: 'rgba(0, 229, 255, 0.6)' }}>of {totalCount} habits</div>
+              <div className="fb-stat-sub fb-stat-sub--primary">of {totalCount} habits</div>
             </div>
-            <div className="fb-stat-card" style={{ background: 'rgba(124, 58, 237, 0.15)' }}>
+            <div className="fb-stat-card fb-stat-card--secondary">
               <div className="fb-stat-label">Streak</div>
               <div className="fb-stat-val" style={{ color: 'var(--color-accent-secondary)' }}>{streak}</div>
-              <div style={{ fontSize: '11px', marginTop: '2px', color: 'rgba(124, 58, 237, 0.6)' }}>days</div>
+              <div className="fb-stat-sub fb-stat-sub--secondary">days</div>
             </div>
-            <div className="fb-stat-card" style={{ background: 'rgba(244, 63, 94, 0.15)' }}>
+            <div className="fb-stat-card fb-stat-card--tertiary">
               <div className="fb-stat-label">Today</div>
               <div className="fb-stat-val" style={{ color: 'var(--color-accent-tertiary)' }}>{progressPercent}%</div>
-              <div style={{ fontSize: '11px', marginTop: '2px', color: 'rgba(244, 63, 94, 0.6)' }}>done</div>
+              <div className="fb-stat-sub fb-stat-sub--tertiary">done</div>
             </div>
           </div>
 
           <div style={{ marginBottom: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--color-text-faded)' }}>Today's progress</span>
-              <span style={{ fontFamily: 'Syne, sans-serif', fontSize: '13px', fontWeight: 700, color: 'var(--color-accent-primary)' }}>{progressPercent}%</span>
+            <div className="fb-prog-header">
+              <span className="fb-prog-title">Today's progress</span>
+              <span className="fb-prog-pct">{progressPercent}%</span>
             </div>
             <div className="fb-prog-track">
               <div className="fb-prog-fill" style={{ width: `${progressPercent}%` }} />
             </div>
             {totalCount > 0 && completedCount === totalCount && (
-              <p style={{ textAlign: 'center', color: 'var(--color-accent-tertiary)', fontWeight: '600', margin: '10px 0 0', fontSize: '14px' }}>All habits done! Amazing day!</p>
+              <p className="fb-prog-done-msg">All habits done! Amazing day!</p>
             )}
           </div>
 
-          <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-text-faded)', fontWeight: '500', marginBottom: '12px' }}>Today's habits</div>
+          <div className="fb-section-title">Today's habits</div>
           {habits.map((habit, i) => (
             <HabitCard
               key={habit.id}
